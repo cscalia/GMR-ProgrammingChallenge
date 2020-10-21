@@ -6,26 +6,34 @@ namespace Code.Table
 {
     public class UITable : MonoBehaviour
     {
-        [Header("Prefabs")]
-        public Transform rowContainer;
-        public Text textPrefab;
-
+        [Header("References")]
+        [SerializeField]
+        private Transform content;
+        
+        [Header("Prefabs")] 
+        [SerializeField]
+        private Transform rowContainer;
+        [SerializeField]
+        private Text contentTextPrefab;
+        [SerializeField]
+        private Text headerTextPrefab;
+        
         private List<GameObject> childs = new List<GameObject>();
 
         public void AddTitle(string titleText)
         {
             Transform titleContainer = CreateRow();
-            AddText(titleText, titleContainer, FontStyle.Bold);
+            AddText(titleText, titleContainer, headerTextPrefab);
         }
 
         public void AddHeaders(string[] headerElements)
         {
-            AddElements(headerElements, CreateRow(), FontStyle.Bold);
+            AddElements(headerElements, CreateRow(), headerTextPrefab);
         }
 
         public void AddContent(string[] rowElements)
         {
-            AddElements(rowElements, CreateRow(), FontStyle.Normal);
+            AddElements(rowElements, CreateRow(), contentTextPrefab);
         }
 
         public void Clear()
@@ -37,26 +45,25 @@ namespace Code.Table
             childs.Clear();
         }
 
-        private void AddElements(string[] elements, Transform rowContainer, FontStyle fontStyle)
+        private void AddElements(string[] elements, Transform rowContainer, Text textStyle)
         {
             for (int i = 0; i < elements.Length; i++)
             {
-                AddText(elements[i], rowContainer, fontStyle);
+                AddText(elements[i], rowContainer, textStyle);
             }
         }
 
         private Transform CreateRow()
         {
-            Transform container = Instantiate(rowContainer, transform);
+            Transform container = Instantiate(rowContainer, content);
             childs.Add(container.gameObject);
             return container;
         }
 
-        private void AddText(string text, Transform container, FontStyle fontStyle)
+        private void AddText(string text, Transform container, Text textStyle)
         {
-            Text textInstance = Instantiate(textPrefab, container);
+            Text textInstance = Instantiate(textStyle, container);
             textInstance.text = text;
-            textInstance.fontStyle = fontStyle;
         }
     }
 }
